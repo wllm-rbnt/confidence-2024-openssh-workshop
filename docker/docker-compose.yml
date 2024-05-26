@@ -1,0 +1,20 @@
+services:
+  lab-server:
+    build: ./lab-server
+    ports:
+      - "8022:22"
+    networks:
+      - public_net
+      - private_net
+  internal-machine:
+    build: ./internal-machine
+    networks:
+      - private_net
+
+networks:
+  public_net:
+    driver: bridge
+  private_net:
+    driver: bridge
+    internal: true
+

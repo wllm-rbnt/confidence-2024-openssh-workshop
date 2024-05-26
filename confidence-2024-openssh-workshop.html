@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="William Robinet (Conostix S.A.)" />
+  <title>Exploring OpenSSH: Hands-On Workshop for Beginners</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <script>
+      $(document).ready
+      (
+        function()
+        {
+              twemoji.parse(document.body);
+        }
+      );
+  </script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Exploring OpenSSH: Hands-On Workshop for
+Beginners</h1>
+<p class="author">William Robinet (Conostix S.A.)</p>
+</header>
+<p><strong>Confidence 2024 Kraków</strong></p>
+<p><strong>Exploring OpenSSH: Hands-On Workshop for
+Beginners</strong></p>
+<p>William Robinet (Conostix S.A.) - 2024-05-27</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="about-me">About me</h1>
+<ul>
+<li>Introduced to Open Source &amp; Free Software around the end of the
+90’s</li>
+<li>CompSci studies, work in IT at Conostix S.A. - AS197692</li>
+<li>ssldump improvements (build system, bug fixes, JSON output, IPv6
+&amp; ja3(s), …)</li>
+<li>asn1template: painless ASN.1 editing</li>
+<li>🎸 🏃 🚵 🔭 ⏚</li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="before-we-begin">Before we begin</h1>
+<h2 id="workshop-resources">Workshop resources</h2>
+<p>Workshop repository:
+<strong>https://github.com/wllm-rbnt/confidence-2024-openssh-workshop</strong></p>
+<ul>
+<li>HTML -&gt; TODO tiny URLs</li>
+<li>PDF -&gt; TODO tiny URLs</li>
+</ul>
+<p>Slides are written in Markdown</p>
+<p>Get the <em>PDF</em>/<em>HTML</em> or use <em>patat</em> to render
+the presentation</p>
+<p>Go to release page
+<strong>https://github.com/jaspervdj/patat/releases</strong></p>
+<p>or</p>
+<pre><code>$ wget https://github.com/jaspervdj/patat/releases/download/v0.12.0.0/patat-v0.12.0.0-linux-x86_64.tar.gz
+$ tar xzf patat-v0.12.0.0-linux-x86_64.tar.gz patat-v0.12.0.0-linux-x86_64/patat
+$ patat-v0.12.0.0-linux-x86_64/patat confidence-2024-openssh-workshop.md</code></pre>
+<hr />
+<!--config:
+wrap: false
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="labs-network-layout">Labs Network Layout</h1>
+<pre><code>┌─────────────────────┐          ┌──────────────────────────────────────────────┐
+│ CONFidence 2024     │          │ Lab network                                  │
+│                     │          │                                              │
+│ ┌───────────────┐   │          │ ┌────────────┐          ┌──────────────────┐ │
+│ │ local machine │   │&lt;--------&gt;│ │ lab-server │          │ internal-machine │ │
+│ └───────────────┘   │&quot;Internet&quot;│ └────────────┘          └──────────────────┘ │
+│                     │          │  Pub 172.18.0.2                              │
+│                     │          │  Priv 172.19.0.2 &lt;-LAN-&gt; Priv 172.19.0.3     │
+└─────────────────────┘          └──────────────────────────────────────────────┘</code></pre>
+<ul>
+<li><p><em>local machine</em> is your personal laptop or VM. It is
+located “somewhere on the Internet” It is able to reach
+<em>lab-server</em> on TCP port 22 (on 172.18.0.2)</p></li>
+<li><p><em>Lab network</em> is a remote private LAN (172.19.0.0/16 in
+this case)</p></li>
+<li><p>On this remote LAN, <em>lab-server</em> is privately known as
+172.19.0.2.</p></li>
+<li><p><em>lab-server</em> is connected to another machine named
+<em>internal-machine</em> (172.19.0.3)</p></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="usernames-and-passwords">Usernames and Passwords</h1>
+<p>2 users exist on each VM: <em>root</em> and <em>user</em>.</p>
+<p>Passwords are the same as usernames. <em>user</em> has sudo access on
+each machine.</p>
+<h1 id="shell-commands">Shell commands</h1>
+<p>Shell commands are prefixed by a prompt designating the machine on
+which the command shall be run:</p>
+<pre><code>(local)$ &lt;local command&gt;
+(lab-server)$ &lt;remote command on lab-server&gt;
+(internal-machine)$ &lt;remote commandi on internal-machine&gt;</code></pre>
+<h1 id="ip-addresses">IP addresses</h1>
+<ul>
+<li><p>IP addresses are dynamically allocated when you execute
+<code>start_containers.sh</code></p></li>
+<li><p>3 IP addresses will appear during this workshop</p>
+<ul>
+<li>lab-server_pub</li>
+<li>lab-server_priv</li>
+<li>internal-machine_priv</li>
+</ul></li>
+</ul>
+<hr />
+<!--config:
+wrap: false
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="labs-containers">Labs Containers</h1>
+<ul>
+<li><p>2 containers will be used during this workshop, one for
+<em>lan-server</em> and a second for <em>internal-machine</em></p></li>
+<li><p>Start containers with:</p>
+<pre><code>  (local)$ cd docker
+  (local)$ ./start_containers.sh</code></pre></li>
+<li><p>Stop containers with:</p>
+<pre><code> (local)$ cd docker
+ (local)$ ./stop_containers.sh</code></pre></li>
+<li><p>Cleanup the whole docker setup: <strong>WARNING this will remove
+all containers, images and networks from your local setup</strong></p>
+<pre><code>  (local)$ cd docker
+  (local)$ ./docker_cleanup.sh
+  (local)$ sudo systemctl restart docker</code></pre></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="illustration-telnet-is-not-secure">Illustration: Telnet is not
+secure</h1>
+<ul>
+<li><p>A <em>telnet</em> server is listening on <em>lab-server</em>, TCP
+port 23</p></li>
+<li><p>Start a traffic capture on TCP port 23 in another terminal:</p>
+<pre><code>  (local)$ sudo apt install wireshark
+  (local)$ sudo wireshark</code></pre></li>
+</ul>
+<p>or</p>
+<pre><code>(local)$ sudo apt install tcpdump
+(local)$ sudo tcpdump -n -i any -XXX tcp and port 23</code></pre>
+<ul>
+<li><p>Then, in another shell, run the <em>telnet</em> client on your
+local machine:</p>
+<pre><code>  (local)$ sudo apt install telnet
+  (local)$ telnet 172.18.0.2</code></pre></li>
+<li><p>Login, <em>user</em> Password, <em>user</em></p></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="two-main-issues">Two main issues:</h1>
+<ul>
+<li><p>Cleartext message exchange: vulnerable to traffic sniffing
+tcpdump/wireshark on traffic path (firewall, router)</p></li>
+<li><p>Insecure authentication: vulnerable to Man-In-The-Middle attack
+Ettercap (another machine on same LAN), proxy software on an
+intermediate router/firewall</p></li>
+</ul>
+<p>Same goes for FTP, HTTP, SMTP, …</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="ssh-history-implementations">SSH History &amp;
+Implementations</h1>
+<p>SSH stands for <strong>S</strong>ecure <strong>SH</strong>ell</p>
+<h2 id="protocol-versions">Protocol Versions</h2>
+<ul>
+<li><a href="https://www.ssh.com/academy/ssh/port">SSH-1.0</a> 1995, by
+Tatu Ylönen, a researcher at Helsinki University of Technology</li>
+<li>SSH-2.0 2006, IETF Standardization RFC 4251-4256</li>
+<li>SSH-1.99 Retro-compatibility pseudo-version</li>
+<li>SSH3 Experimental implementation using HTTP/3 (QUIC)</li>
+</ul>
+<h2 id="implementations">Implementations</h2>
+<ul>
+<li>OpenSSH on Unices, Client &amp; server for GNU/Linux, *BSD, MacOS,
+…</li>
+<li>Dropbear, Lightweight implementation, for embedded-type Linux (or
+other Unices) systems</li>
+<li>On mobile: ConnectBot for Android, Termius for Apple iOS</li>
+<li>Terminal &amp; File transfer clients for MS Windows: PuTTY,
+MobaXterm, WinSCP, FileZilla, …</li>
+<li>Network Appliances, OpenSSH or custom implementation</li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="focus-on-openssh-tool-suite">Focus on OpenSSH Tool suite</h1>
+<ul>
+<li>Focus on the OpenSSH tool suite, a project started in 1999</li>
+<li>Clients &amp; Server software</li>
+<li>This is the reference opensource version for many OSes</li>
+<li>It is based on modern cryptography algorithms and protocols</li>
+<li>It is widely available out-of-the-box</li>
+<li>It contains a wide range of tools (remote shell, file transfer, key
+management, …)</li>
+<li>Automation friendly (Ansible, or custom scripts)</li>
+<li>Main tools
+<ul>
+<li><em>ssh</em> - Remote terminal access</li>
+<li><em>scp</em> - File transfer</li>
+<li><em>sftp</em> - FTP-like file transfer</li>
+</ul></li>
+<li>Helpers
+<ul>
+<li><em>ssh-keygen</em> - Public/Private keypair generation</li>
+<li><em>ssh-copy-id</em> - Key deployment script</li>
+<li><em>ssh-agent</em> - Key management daemon (equivalent to PuTTY’s
+pageant.exe)</li>
+<li><em>ssh-add</em> - Key/Agent management tool</li>
+</ul></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="documentation">Documentation</h1>
+<p>Online manual pages</p>
+<ul>
+<li><p>Listing of <strong>C</strong>ommand <strong>LI</strong>ne man
+pages:</p>
+<p><code>$ man -k ssh</code></p></li>
+<li><p>Listing client’s configuration options:</p>
+<p><code>$ man ssh_config</code></p></li>
+<li><p>Listing server’s configuration options (the
+<em>openssh-server</em> package must be installed):</p>
+<p><code>$ man sshd_config</code></p></li>
+<li><p>CLI help, in your terminal, just type</p>
+<ul>
+<li><code>ssh</code> for the client</li>
+<li><code>/usr/sbin/sshd --help</code> for the server</li>
+<li><code>ssh-keygen --help</code> for the key management tool</li>
+<li>…</li>
+</ul></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="first-login-12---commands-tcpdump-fingerprints">First Login
+(1/2) - Commands, tcpdump &amp; fingerprints</h1>
+<p>Syntax is: <code>ssh &lt;username&gt;@&lt;host&gt;</code>, where
+<em><host></em> can be a hostname or an IP address</p>
+<p>Username and password are the same as the one from the telnet
+example: - Username: <em>user</em> / Password: <em>user</em></p>
+<ul>
+<li><p>Start a traffic capture on TCP port 22 in another terminal,
+traffic is <strong>encrypted</strong>:</p>
+<p>(local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22</p></li>
+</ul>
+<p>TODO Retrieve the server keys fingerprints through a secure
+channel:</p>
+<pre><code>https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/...</code></pre>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="first-login-22---connection-host-authentication">First Login
+(2/2) - Connection &amp; host authentication</h1>
+<p>Type the following in a local terminal on your machine:</p>
+<pre><code>(local)$ ssh user@&lt;lab-server_pub&gt;
+or
+(local)$ ssh -o VisualHostKey=true user@&lt;lab-server_pub&gt;
+The authenticity of host &#39;172.18.0.2 (172.18.0.2)&#39; can&#39;t be established.
+ED25519 key fingerprint is SHA256:HFofTLfh2W/1IR3+g0sXGAcRs4ZnVsWwGKmbOzeMefk.
++--[ED25519 256]--+
+|          . +B=*o|
+|         o ooBX.o|
+|        o oo=Oo=.|
+|       + o..= o.*|
+|      . S .o o o=|
+|          o . o..|
+|           = o   |
+|          = *    |
+|           + oE  |
++----[SHA256]-----+
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])?</code></pre>
+<ul>
+<li>Type <em>yes</em> to accept and go on with user authentication, or
+<em>no</em> to refuse and disconnect immediately</li>
+<li>or type the <em>fingerprint</em> you received from the secure
+channel If the fingerprint you entered matches the one that is printed,
+the system will proceed with user authentication</li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="known-hosts-fingerprint-databases">Known hosts fingerprint
+databases</h1>
+<p>Remote Host Authentication is performed only on first connection</p>
+<p><code>~/.ssh/known_hosts</code> is then populated with host reference
+and corresponding key fingerprint</p>
+<p><code>/etc/ssh/ssh_known_hosts</code> can be used as a system-wide
+database of know hosts</p>
+<p>Hosts references can be stored as clear text (IP or hostname) or the
+corresponding hash (see <em>HashKnownHosts</em> option)</p>
+<h1 id="host-keys-location-on-openssh-server">Host keys location on
+OpenSSH server</h1>
+<pre><code>(lab-server)$ ls -l /etc/ssh/ssh_host\*pub
+-rw------- 1 root root  513 May 23 12:39 /etc/ssh/ssh_host_ecdsa_key
+-rw-r--r-- 1 root root  179 May 23 12:39 /etc/ssh/ssh_host_ecdsa_key.pub
+-rw------- 1 root root  411 May 23 12:39 /etc/ssh/ssh_host_ed25519_key
+-rw-r--r-- 1 root root   99 May 23 12:39 /etc/ssh/ssh_host_ed25519_key.pub
+-rw------- 1 root root 2602 May 23 12:39 /etc/ssh/ssh_host_rsa_key
+-rw-r--r-- 1 root root  571 May 23 12:39 /etc/ssh/ssh_host_rsa_key.pub</code></pre>
+<h1 id="computing-fingerprints-of-host-keys">Computing fingerprints of
+host keys</h1>
+<pre><code>(lab-server)$ for i in $(ls -1 /etc/ssh/ssh_host\*pub); do ssh-keygen -lf $i; done
+256 SHA256:gbF30TEqv4ucpI3VFIEjq0dnrji5woxacnPe+N9mFX8 root@460a6cac3a3c (ECDSA)
+256 SHA256:/hUAOroJsQzhM4f9qSZxcBLqEYqmoPi03pVX2fQUxrg root@460a6cac3a3c (ED25519)
+3072 SHA256:D0gvg+2kFzvrLjqi0OEZ23tnQN3H/+oB3cqm0VZHWiQ root@460a6cac3a3c (RSA)</code></pre>
+<p>Note: use <code>ssh-keygen -lvf &lt;public_key&gt;</code> to generate
+the visual ASCII art representation of a key</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="configuration-12">Configuration (1/2)</h1>
+<h2 id="configuration-files">Configuration files</h2>
+<p>Client:</p>
+<ul>
+<li>Per-user client configuration: <code>~/.ssh/config</code></li>
+<li>System-wide client configuration:
+<code>/etc/ssh/ssh_config</code></li>
+<li>System-wide local configuration:
+<code>/etc/ssh/ssh_config.d/*</code></li>
+</ul>
+<p>Server:</p>
+<ul>
+<li>Server configuration: <code>/etc/ssh/sshd_config</code></li>
+<li>Server local configuration:
+<code>/etc/ssh/sshd_config.d/*</code></li>
+</ul>
+<h2 id="configuration-options">Configuration options</h2>
+<ul>
+<li>Client configuration options: <code>$ man ssh_config</code></li>
+<li>Server configuration options: <code>$ man sshd_config</code></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="configuration-22---per-host-client-configuration">Configuration
+(2/2) - Per host client configuration</h1>
+<p>Client configuration options can be specified per host</p>
+<p>Example:</p>
+<p>Type following in your local <code>~/.ssh/config</code>:</p>
+<pre><code>Host lab-server
+    Hostname &lt;lab-server_pub&gt;
+    User user</code></pre>
+<p>Tips: Printing the “would be applied” configuration</p>
+<p>The <code>-G</code> parameter cause <code>ssh</code> to print the
+configuration that would be applied for a given connection (without
+actually connecting)</p>
+<pre><code>(local)$ ssh -G lab-server</code></pre>
+<p>The following command should output your username:</p>
+<pre><code>(local)$ ssh -G lab-server | grep user
+user user</code></pre>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="tips">Tips</h1>
+<h2 id="increase-verbosity">Increase verbosity</h2>
+<p>Launch ssh commands with -v parameter in order to increase verbosity,
+and help with debugging</p>
+<p>Example:</p>
+<pre><code>(local)$ ssh -v user@&lt;lab-server_pub&gt;
+OpenSSH_8.4p1 Debian-5+deb11u2, OpenSSL 1.1.1w  11 Sep 2023
+debug1: Reading configuration data /home/user/.ssh/config
+debug1: Reading configuration data /etc/ssh/ssh_config
+[...]</code></pre>
+<h2 id="escape-character">Escape character</h2>
+<p>The escape character can be used to pass out-of-band commands to ssh
+client</p>
+<ul>
+<li>By default <code>~</code>, must be at beginning of a line</li>
+<li>Repeat char in order to type it ( <code>~~</code> )</li>
+<li>Commands:
+<ul>
+<li>Quitting current session <code>~.</code></li>
+<li>List Forwarded connections <code>~#</code></li>
+</ul></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="public-key-authentication">Public Key Authentication</h1>
+<h2 id="main-authentication-methods">Main Authentication Methods</h2>
+<ul>
+<li><em>Password</em> authentication</li>
+<li><em>Public/Private key</em> authentication
+<ul>
+<li>Used for password-less authentication (passphrase may be required to
+unlock private key)</li>
+</ul></li>
+</ul>
+<h2 id="lab">Lab</h2>
+<ul>
+<li><p>Generate a new key pair on your local system (with or without a
+passphrase):</p>
+<p><code>(local)$ ssh-keygen -f ~/.ssh/my-ssh-key</code></p></li>
+<li><p>Install your public key on the remote server:</p>
+<p><code>(local)$ ssh-copy-id -i ~/.ssh/my-ssh-key.pub user@&lt;lab-server_pub&gt;</code></p>
+<p><strong>Note</strong>: <code>ssh-copy-id</code> copies the public key
+from <code>~/.ssh/authorized_keys</code> to the remote machine</p></li>
+<li><p>Login again with your new key pair:</p>
+<p><code>(local)$ ssh -i ~/.ssh/my-ssh-key user@&lt;lab-server_pub&gt;</code></p></li>
+<li><p>Reference your key pair in your personal local configuration file
+(<code>~/.ssh/config</code>):</p>
+<p>Host lab-server Hostname <lab-server_pub> User user IdentityFile
+~/.ssh/my-ssh-key</p></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="authentication-agent">Authentication Agent</h1>
+<p>The Authentication Agent can hold access to private keys, thus
+eliminating the need to enter passphrase at each use</p>
+<p>Start the agent:</p>
+<pre><code>(local)$ ssh-agent | tee ssh-agent-env.sh
+SSH_AUTH_SOCK=/tmp/ssh-KwTcl7ZieUKD/agent.1193973; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=1193974; export SSH_AGENT_PID;
+echo Agent pid 1193974;
+(local)$ source ssh-agent-env.sh
+Agent pid 1193974</code></pre>
+<p>Load private key to the agent:</p>
+<pre><code>(local)$ ssh-add ~/.ssh/my-ssh-key
+Enter passphrase for /home/user/.ssh/my-ssh-key: ********
+Identity added: my-ssh-key (user@local)</code></pre>
+<p>Connect to remote machine:</p>
+<pre><code>(local)$ ssh user@&lt;lab-server_pub&gt;</code></pre>
+<p>Going further, <a
+href="https://www.funtoo.org/Funtoo:Keychain">keychain</a> can be used
+to manage ssh-agent &amp; keys across logins sessions</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="remote-command-execution">Remote Command Execution</h1>
+<p>Simple command execution:</p>
+<pre><code>(local)$ ssh user@&lt;lab-server_pub&gt; hostname</code></pre>
+<p>With redirection to local file:</p>
+<pre><code>(local)$ ssh user@&lt;lab-server_pub&gt; hostname &gt; hostname.txt</code></pre>
+<p>With redirection to remote file:</p>
+<pre><code>(local)$ ssh user@&lt;lab-server_pub&gt; &quot;hostname &gt; hostname.txt&quot;</code></pre>
+<p>With pipes:</p>
+<pre><code>(local)$ echo blabla | ssh user@&lt;lab-server_pub&gt; &quot;cat - | tr &#39;a-z&#39; &#39;A-Z&#39;&quot;</code></pre>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="jumphost--">Jumphost &lt;-</h1>
+<p>A Jump Host is a machine used as a relay to reach another, otherwise
+possibly unreachable, machine. This unreachable machine is named
+internal-machine</p>
+<pre><code> ┌─────────────────────┐      ┌──────────────────────────────────────────────┐
+ │ Internet            │      │ Internal network                             │
+ │                     │      │                                              │
+ │ ┌───────────────┐   │      │ ┌────────────┐          ┌──────────────────┐ │
+ │ │ local machine ├───┼──────┤►│ lab-server ├─────────►│ internal-machine │ │
+ │ └───────────────┘   │      │ └────────────┘          └──────────────────┘ │
+ │                     │      │  used as jumphost        unreachable to      │ 
+ │                     │      │                          the outside world   │
+ └─────────────────────┘      └──────────────────────────────────────────────┘</code></pre>
+<p><em>Lab objective</em>: Connect to internal-machine from your local
+machine via SSH with a single command</p>
+<p>Setup:</p>
+<ul>
+<li><p>First, copy your public key to the remote server
+(lab-server):</p>
+<p><code>(local)$ scp .ssh/my-ssh-key.pub user@&lt;lab-server_pub&gt;:</code></p></li>
+<li><p>Login to the remote server then copy your public key to the
+destination machine:</p>
+<p><code>(local)$ ssh user@&lt;lab-server_pub&gt;</code>
+<code>(lab-server)$ ssh-copy-id -f -i my-ssh-key.pub &lt;internal-machine_priv&gt;</code></p></li>
+<li><p>Connect to the remote machine with a single command:</p>
+<p><code>(local)$ ssh -J user@&lt;lab-server_pub&gt; user@&lt;internal-machine_prib&gt;</code></p></li>
+</ul>
+<p>TODO <strong>Note</strong>: <em>internal-machine</em> host key
+fingerprints available at
+https://github.com/wllm-rbnt/confidence-2024-openssh-workshop</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="socks-proxy-12">SOCKS proxy (1/2)</h1>
+<p>A <em>SOCKS server</em> proxies TCP connections to arbitrary IP
+addresses and ports</p>
+<p>With SOCKS 5, DNS queries can be performed by the proxy on behalf of
+the client</p>
+<pre><code>┌───────────────────────┐            ┌──────────────────────────────────────────────┐
+│   Internet            │            │ Internal network                             │
+│                       │            │                                              │
+│   ┌───────────────┐   │   Step 1   │ ┌────────────┐  Step 3  ┌──────────────────┐ │
+│   │ local machine ├───┼────────────┤►│ lab-server ├─────────►│ internal-machine │ │
+│   └─┬───────────▲─┘   │    SSH     │ └────────────┘  HTTP    └──────────────────┘ │
+│     │   SOCKS   │     │            │  The SOCKS proxy         The internal HTTP   │
+│     └───────────┘     │            │                          server              │
+│         Step 2        │            │                                              │
+└───────────────────────┘            └──────────────────────────────────────────────┘</code></pre>
+<p><em>Lab objective</em>: Reach the internal HTTP server at
+http://secret-intranet (running on internal-machine) through a SOCKS
+proxy running on lab-server</p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="socks-proxy-22">SOCKS proxy (2/2)</h1>
+<pre><code>┌───────────────────────┐            ┌──────────────────────────────────────────────┐
+│   Internet            │            │ Internal network                             │
+│                       │            │                                              │
+│   ┌───────────────┐   │   Step 1   │ ┌────────────┐  Step 3  ┌──────────────────┐ │
+│   │ local machine ├───┼────────────┤►│ lab-server ├─────────►│ internal-machine │ │
+│   └─┬───────────▲─┘   │    SSH     │ └────────────┘  HTTP    └──────────────────┘ │
+│     │   SOCKS   │     │            │  The SOCKS proxy         The internal HTTP   │
+│     └───────────┘     │            │                          server              │
+│         Step 2        │            │                                              │
+└───────────────────────┘            └──────────────────────────────────────────────┘</code></pre>
+<ul>
+<li><p>Start a local SOCKS Proxy:
+<code>(local)$ ssh -D 1234 user@&lt;lab-server_pub&gt;</code> by
+establishing an SSH connection to lab-server with parameter
+<code>-D</code></p></li>
+<li><p>Check, locally, for listening TCP port with
+<code>(local)$ ss -tpln | grep :1234</code></p></li>
+<li><p>Configure your local browser to use local TCP port 1234 as a
+SOCKS proxy</p></li>
+<li><p>Configure your local browser to send DNS queries though the SOCKS
+proxy (tick the option in configuration)</p></li>
+<li><p>Point your browser to http://secret-intranet or Try it with
+curl:</p>
+<pre><code>  (local)$ http_proxy=socks5h://127.0.0.1:1234 curl http://secret-intranet
+  Secret intranet server !
+  This is lab-server listening on 127.0.0.1 port 80.</code></pre></li>
+<li><p>Bonus: look at your local traffic with <em>tcpdump</em>, you
+shouldn’t see any DNS exchanges</p></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="reverse-socks-proxy">Reverse SOCKS proxy</h1>
+<p>A reverse SOCKS proxy setup allows a remote machine to use your local
+machine as a SOCKS proxy</p>
+<pre><code>┌───────────────────────┐          ┌──────────────────────────────────────────────┐
+│   Internet            │          │ Internal network                             │
+│                       │          │                                              │
+│   ┌───────────────┐   │  Step 1  │ ┌────────────┐          ┌──────────────────┐ │
+│   │ local machine ├───┼──────────┤►│ lab-server ├─────────►│ internal-machine │ │
+│   └┬──────────────┘   │   SSH    │ └─▲────────┬─┘          └──────────────────┘ │
+│    │ Step 3           │          │   │        │                                 │
+│    ▼ HTTP             │          │   │ Step 2 │                                 │
+│  http://icanhazip.com │          │   └────────┘                                 │
+│                       │          │     SOCKS                                    │
+└───────────────────────┘          └──────────────────────────────────────────────┘</code></pre>
+<p><em>Lab objective</em>: Reach the external HTTP server at
+http://icanhazip.com from lab-server through a SOCKS proxy running on
+your local machine</p>
+<p>Setup:</p>
+<ul>
+<li><p>Start a remote SOCKS Proxy:
+<code>(local)$ ssh -R 1234 user@&lt;lab-server_pub&gt;</code> by
+establishing an SSH connection to lab-server with parameter -R</p></li>
+<li><p>Check, on lab-server, for listening TCP port with
+<code>(lab-server)$ ss -tpln | grep :1234</code></p></li>
+<li><p>Point your curl on lab-server to http://icanhazip.com though the
+SOCKS proxy listening on 127.0.0.1<span class="emoji"
+data-emoji="1234">🔢</span></p>
+<pre><code>  (lab-server_pub)$ http_proxy=socks5h://127.0.0.1:1234 curl http://icanhazip.com
+  &lt;Confidence conference Internet access public IP address&gt;</code></pre></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="localforward">LocalForward</h1>
+<p>A <em>LocalForward</em> creates a locally listening TCP socket that
+is connected over SSH to a TCP port reachable in the network scope of a
+remote machine</p>
+<p><em>Lab objective:</em> Create and connect local listening TCP socket
+on port 8888 to TCP port 80 on 127.0.0.1 in the context of
+<em>lab-server</em></p>
+<p>Setup:</p>
+<ul>
+<li><p>Configure the forwarding while connecting to <em>lab-server</em>
+through SSH with -L parameter: (local)$ ssh -L 8888:127.0.0.1:80
+user@<lab-server_pub></p></li>
+<li><p>-L parameter syntax:</p></li>
+</ul>
+<p><code>&lt;local_port&gt;:&lt;remote_IP&gt;:&lt;remote_port&gt;</code></p>
+<p>can be extended to</p>
+<p><code>&lt;local_IP&gt;:&lt;local_port&gt;:&lt;remote_IP&gt;:&lt;remote_port&gt;</code></p>
+<ul>
+<li><p>SSH is now listening on TCP port 8888 on your local machine,
+check with: <code>(local)$ ss -tpln</code></p></li>
+<li><p>Point your browser to http://127.0.0.1:8888 You should see
+something like:</p>
+<p>Hello world ! This is lab-server listening on 127.0.0.1 port
+80.</p></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="remoteforward">RemoteForward</h1>
+<p>A <em>RemoteForward</em> creates a listening TCP socket on a remote
+machine that is connected over SSH to a TCP port reachable in the
+network scope of the local machine</p>
+<p><em>Lab objective</em>: Create a TCP socket on <em>lab-server</em> on
+port 8123 and connect it to a locally listening netcat on TCP port
+1234</p>
+<p>Setup:</p>
+<ul>
+<li><p>Start a listening service on localhost on your local machine on
+TCP port 1234: <code>(local)$ nc -l -p 1234 127.0.0.1</code></p></li>
+<li><p>Check that it’s listening with <code>ss</code>:
+<code>(local)$ ss -tpln | grep 1234</code></p></li>
+<li><p>Configure the forwarding on TCP port 8123 while connecting to
+<em>lab-server</em> with <code>-R</code> parameter:</p>
+<pre><code>    ssh -R 8123:127.0.0.1:1234 user@&lt;lab-server_pub&gt;</code></pre></li>
+<li><p><code>ssh</code> is now listening on TCP port 8123 on
+<em>lab-server</em></p></li>
+</ul>
+<p>-R parameter syntax:</p>
+<p><code>&lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt;</code></p>
+<p>can be extended to</p>
+<p><code>&lt;remote_IP&gt;:&lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt;</code></p>
+<ul>
+<li>Check its listening status on lab-server:
+<code>(lab-server)$ netstat -tpln | grep 8123</code></li>
+<li>Connect to the forwarded service on remote machine on port 8123 with
+netcat: <code>(lab-server)$ nc 127.0.0.1 8123</code></li>
+<li>Both netcat instances, local &amp; remote, should be able to
+communicate with each other</li>
+</ul>
+<p><strong>Note</strong>: reverse proxy SOCKS is a special use case of
+<code>-R</code></p>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="x11-forwarding">X11 Forwarding</h1>
+<p><em>Lab objective:</em> Start a graphical application on
+<em>lab-server</em>, and get the visual feedback locally</p>
+<p><em>Setup</em>:</p>
+<ul>
+<li>Connect to lab-server with <code>-X</code> parameter:
+<code>(local)$ ssh -X user@&lt;lab-server_pub&gt;</code></li>
+<li>Then, start a graphical application on the remote machine:</li>
+</ul>
+<p><code>(lab-server)$ xmessage "This is a test !" &amp;!</code></p>
+<p>or</p>
+<p><code>(lab-server)$ xcalc &amp;!</code></p>
+<ul>
+<li>Check processes with <code>(lab-server|local)$ ps auxf</code> on
+<em>lab-server</em> and <em>local machine</em></li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>On a Linux local client, the XOrg graphical server is used</li>
+<li>On a Windows machine use:
+<ul>
+<li>VcXsrv: https://sourceforge.net/~/vcxsrv/</li>
+<li>or XMing: https://sourceforge.net/~/xming/</li>
+</ul></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="connection-to-legacy-systems-12">Connection to Legacy Systems
+(1/2)</h1>
+<h2 id="host-key-algorithm-mismatch">Host key algorithm mismatch</h2>
+<p>“Unable to negotiate with 10.11.12.13 port 22: no matching host key
+type found. Their offer: ssh-rsa”</p>
+<pre><code>(local)$ ssh -o HostKeyAlgorithms=ssh-rsa &lt;user&gt;@&lt;machine&gt;</code></pre>
+<ul>
+<li>Listing known host key algorithms:
+<code>(local)$ ssh -Q key</code></li>
+</ul>
+<h2 id="wrong-key-exchange-algorithm">Wrong key exchange algorithm</h2>
+<p>“Unable to negotiate with 10.11.12.13 port 22: no matching key
+exchange method found. Their offer:
+diffie-hellman-group-exchange-sha1”</p>
+<pre><code>(local)$ ssh -o KexAlgorithms=diffie-hellman-group1-sha1 &lt;user&gt;@&lt;machine&gt;</code></pre>
+<ul>
+<li>Listing known key exchange algorithms:
+<code>(local)$ ssh -Q kex</code></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="connection-to-legacy-systems-22">Connection to Legacy Systems
+(2/2)</h1>
+<h2 id="wrong-cipher">Wrong cipher</h2>
+<p>“Unable to negotiate with 10.11.12.13 port 22: no matching cipher
+found. Their offer: aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc”</p>
+<pre><code>(local)$ ssh -o Ciphers=aes256-cbc &lt;user&gt;@&lt;machine&gt;</code></pre>
+<ul>
+<li>Listing known ciphers: <code>(local)$ ssh -Q cipher</code></li>
+</ul>
+<h2 id="wrong-public-key-signature-algorithm">Wrong public key signature
+algorithm</h2>
+<p>“debug1: send_pubkey_test: no mutual signature algorithm” (with ssh
+-v)</p>
+<pre><code>$ ssh -o PubkeyAcceptedAlgorithms=ssh-rsa &lt;user&gt;@&lt;machine&gt;</code></pre>
+<ul>
+<li>Listing known public key sig algorithm:
+<code>(local)$ ssh -Q key-sig</code> or
+<code>(local)$ ssh -Q PubkeyAcceptedAlgorithms</code></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="ssh-tarpit">SSH Tarpit</h1>
+<ul>
+<li><p>The legitimate SSH server is running on port 22 on the remote
+server</p></li>
+<li><p><code>endlessh</code>, a simple honeypot, is running on port 2222
+on the remote server for demonstration purpose</p></li>
+<li><p>Try to connect to port 2222 with
+<code>ssh user@&lt;lab-server_pub&gt; -p 2222</code></p></li>
+<li><p>Check both ports with <code>netcat</code>:</p>
+<pre><code>      (local)$ nc -nv 31.22.124.187 22
+      (UNKNOWN) [31.22.124.187] 22 (ssh) open
+      SSH-2.0-OpenSSH_9.2p1 Debian-2
+
+      (local)$ nc -nv 31.22.124.187 2222
+      (UNKNOWN) [31.22.124.187] 2222 (?) open
+      XkZ?NK&gt;-h5xs#/OSF
+      SU6Jv
+      6%n[;
+      M5I&#39;R8.W}wgE?&quot;DhADl&quot;jp&quot;$x#4;Z
+      wT%mJK_l5(Nf]Iw_
+      $2&#39;ZUmQ2YgdyXnI,
+      \7_c.f4@bQHcY&gt;N&#39;y
+      [...]</code></pre></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="tmux---terminal-multiplexer">tmux - <strong>t</strong>erminal
+<strong>mu</strong>ltiple<strong>x</strong>er</h1>
+<p>tmux can be used to keep interactive shell tasks running while you’re
+disconnected</p>
+<ul>
+<li>Installation: <code>$ sudo apt install tmux</code></li>
+<li>Create a tmux session: <code>$ tmux</code></li>
+<li>List tmux sessions: <code>$ tmux ls</code></li>
+<li>Attach to first session: <code>$ tmux a</code></li>
+<li>Attach to session by index #: <code>$ tmux a -t 1</code></li>
+<li>Commands inside a session:
+<ul>
+<li><code>Ctrl-b d</code>: detach from session</li>
+<li><code>Ctrl-b c</code>: create new window</li>
+<li><code>Ctrl-b n</code> / <code>Ctrl-b p</code>: switch to
+next/previous window</li>
+<li><code>Ctrl-b %</code> / <code>Ctrl-b "</code>: split window
+vertically/horizontally</li>
+<li><code>Ctrl-b &lt;arrow keys&gt;</code>: move cursor across window
+panes</li>
+<li><code>Ctrl-[ + &lt;arrow keys&gt;</code>: browse current pane
+backlog, press return to quit</li>
+</ul></li>
+<li>Documentation: <code>$ man tmux</code></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    left: 4
+    right: 10
+-->
+<h1 id="references">References</h1>
+<ul>
+<li><a href="https://www.openssh.com">OpenSSH</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH History
+(Wikipedia)</a></li>
+<li><a href="https://mwl.io/nonfiction/tools#ssh">SSH Mastery by Michael
+W. Lucas</a></li>
+<li><a
+href="https://www.bsdcan.org/2012/schedule/attachments/193_SSH%20Mastery%20BSDCan%202012-public.pdf">SSH
+Mastery <span class="citation" data-cites="BSDCAN">@BSDCAN</span>
+2012</a></li>
+<li><a href="https://iximiuz.com/en/posts/ssh-tunnels/">A Visual Guide
+to SSH Tunnels</a></li>
+<li><a href="https://blog.tjll.net/ssh-kung-fu/">SSH Kung Fu</a></li>
+<li><a
+href="https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet#ssh">The
+Hacker’s Choice SSH Tips &amp; Tricks</a></li>
+</ul>
+<hr />
+<!--config:
+margins:
+    top: auto
+    left: auto
+    right: auto
+-->
+<p><strong>Thanks for your attention</strong></p>
+</body>
+</html>

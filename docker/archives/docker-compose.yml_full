@@ -1,0 +1,7 @@
+services:
+  ssh:
+    build: ./ssh
+    ports:
+      - "8022:22"
+  ssh2:
+    build: ./ssh2
