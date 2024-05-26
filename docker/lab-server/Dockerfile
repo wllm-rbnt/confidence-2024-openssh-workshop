@@ -6,7 +6,7 @@ RUN apt update && apt install -y tzdata; \
     apt clean;
 
 # SSH client & tools
-RUN apt install -y openssh-client iproute2 iputils-ping vim-nox nano rsync sudo less inetutils-telnetd endlessh tmux x11-utils x11-apps curl;
+RUN apt install -y openssh-client iproute2 iputils-ping vim-nox nano rsync sudo less inetutils-telnetd endlessh tmux x11-utils x11-apps curl apache2;
 
 # Create user
 RUN useradd -m user -s /bin/bash -G sudo

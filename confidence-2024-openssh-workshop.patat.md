@@ -47,9 +47,10 @@ margins:
 
 Workshop repository:
     **https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/**
-
-- HTML -> TODO tiny URLs
-- PDF -> TODO tiny URLs
+    
+- Repository -> **https://tinyurl.com/38ktw8rs**
+- HTML -> **https://tinyurl.com/2a35j83v**
+- PDF -> **https://tinyurl.com/yht2nmkk**
 
 Slides are written in Markdown
 
@@ -305,9 +306,9 @@ Username and password are the same as the one from the telnet example:
 
     (local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22
 
-TODO Retrieve the server keys fingerprints through a secure channel:
+- Retrieve the server keys fingerprints through a secure channel:
 
-    https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/...
+    https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/blob/main/fingerprints.txt
  
 ---
 
@@ -612,8 +613,7 @@ Setup:
 
     `(local)$ ssh -J user@<lab-server_pub> user@<internal-machine_prib>`
 
-TODO
-**Note**: *internal-machine* host key fingerprints available at https://github.com/wllm-rbnt/confidence-2024-openssh-workshop
+**Note**: *internal-machine* host key fingerprints available at https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/blob/main/fingerprints.txt
 
 ---
 
