@@ -1,4 +1,0 @@
-sudo apt install docker-compose-v2
-sudo docker compose build
-sudo docker compose up
-
