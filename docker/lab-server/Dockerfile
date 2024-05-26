@@ -6,7 +6,7 @@ RUN apt update && apt install -y tzdata; \
     apt clean;
 
 # SSH client & tools
-RUN apt install -y openssh-client iproute2 iputils-ping vim-nox nano rsync sudo less inetutils-telnetd endlessh tmux x11-utils x11-apps;
+RUN apt install -y openssh-client iproute2 iputils-ping vim-nox nano rsync sudo less inetutils-telnetd endlessh tmux x11-utils x11-apps curl;
 
 # Create user
 RUN useradd -m user -s /bin/bash -G sudo
@@ -26,7 +26,7 @@ RUN mkdir /var/run/sshd; \
 # entrypoint
 RUN { \
     echo '#!/bin/bash -eu'; \
-    echo "sed -i 's/files dns/files/' /etc/nsswitch.conf"; \
+    echo "echo '172.18.0.1      local_machine' >> /etc/hosts"; \
     echo 'ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime'; \
     echo 'echo "root:${ROOT_PASSWORD}" | chpasswd'; \
     echo 'echo "user:${USER_PASSWORD}" | chpasswd'; \

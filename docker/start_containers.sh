@@ -36,7 +36,7 @@ echo -e "    │ CONFidence 2024     │          │ Lab network               
 echo -e "    │                     │          │                                              │"
 echo -e "    │ ┌───────────────┐   │          │ ┌────────────┐          ┌──────────────────┐ │"
 echo -e "    │ │ local machine │   │<-------->│ │ ${violet}lab-server${nocolor} │          │ ${violet}internal-machine${nocolor} │ │"
-echo -e "    │ └───────────────┘   │ Internet │ └────────────┘          └──────────────────┘ │"
+echo -e "    │ └───────────────┘   │'Internet'│ └────────────┘          └──────────────────┘ │"
 echo -e "    │                     │          │  Pub ${blue}${lab_server_pub}${nocolor}                              │"
 echo -e "    │                     │          │  Priv ${green}${lab_server_priv}${nocolor} <-LAN-> Priv ${red}${internal_machine_priv}${nocolor}     │"
 echo -e "    └─────────────────────┘          └──────────────────────────────────────────────┘"

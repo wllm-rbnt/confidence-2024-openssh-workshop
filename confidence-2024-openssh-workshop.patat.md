@@ -46,7 +46,7 @@ margins:
 ## Workshop resources
 
 Workshop repository:
-    **https://github.com/wllm-rbnt/confidence-2024-openssh-workshop**
+    **https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/**
 
 - HTML -> TODO tiny URLs
 - PDF -> TODO tiny URLs
@@ -80,7 +80,7 @@ margins:
     │ ┌───────────────┐   │          │ ┌────────────┐          ┌──────────────────┐ │
     │ │ local machine │   │<-------->│ │ lab-server │          │ internal-machine │ │
     │ └───────────────┘   │"Internet"│ └────────────┘          └──────────────────┘ │
-    │                     │          │  Pub 172.18.0.2                              │
+    │  IP: 172.18.0.1     │          │  Pub 172.18.0.2                              │
     │                     │          │  Priv 172.19.0.2 <-LAN-> Priv 172.19.0.3     │
     └─────────────────────┘          └──────────────────────────────────────────────┘
 
@@ -579,7 +579,7 @@ margins:
     right: 10
 -->
 
-# Jumphost <-
+# Jumphost
 
 A Jump Host is a machine used as a relay to reach another, otherwise possibly
 unreachable, machine. This unreachable machine is named internal-machine
