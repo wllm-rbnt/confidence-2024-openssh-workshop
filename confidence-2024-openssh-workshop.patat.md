@@ -164,9 +164,9 @@ Shell commands are prefixed by a prompt designating the machine on which the com
 * IP addresses are configured statically when you execute `start_containers.sh`
 
 * 3 IP addresses will appear during this workshop
-    + <lab-server_pub>
-    + <lab-server_priv>
-    + <internal-machine_priv>
+    + <lab-server_pub\>
+    + <lab-server_priv\>
+    + <internal-machine_priv\>
 
 --- 
 
