@@ -64,7 +64,43 @@ or
     $ tar xzf patat-v0.12.0.0-linux-x86_64.tar.gz patat-v0.12.0.0-linux-x86_64/patat
     $ patat-v0.12.0.0-linux-x86_64/patat confidence-2024-openssh-workshop.patat.md
 
+## Matrix Room
+
+See invitation email.
+
 --- 
+
+<!--config:
+wrap: false
+margins:
+    left: 10
+    right: 10
+-->
+
+# Local Machine Setup
+
+## Docker Installation
+
+On Ubuntu:
+
+    sudo apt update
+    sudo apt install docker.io docker-compose-v2
+
+On Debian:
+
+    sudo apt update
+    sudo apt install docker.io
+
+On Fedora:
+
+    sudo dnf install docker
+    sudo systemctl start docker
+
+## Various other tools
+
+We will use `netcat` (`netcat-traditional` on Debian/Ubuntu), `curl`, `tcpdump` (or `wireshark`).
+
+---
 
 <!--config:
 wrap: false
