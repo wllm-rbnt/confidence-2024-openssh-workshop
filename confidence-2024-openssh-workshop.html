@@ -174,7 +174,7 @@
 Beginners</h1>
 <p class="author">William Robinet (Conostix S.A.)</p>
 </header>
-<p><strong>Confidence 2024 Kraków</strong></p>
+<p><strong>CONFidence 2024 Kraków</strong></p>
 <p><strong>Exploring OpenSSH: Hands-On Workshop for
 Beginners</strong></p>
 <p>William Robinet (Conostix S.A.) - 2024-05-27</p>
@@ -217,7 +217,31 @@ the presentation</p>
 <p>or</p>
 <pre><code>$ wget https://github.com/jaspervdj/patat/releases/download/v0.12.0.0/patat-v0.12.0.0-linux-x86_64.tar.gz
 $ tar xzf patat-v0.12.0.0-linux-x86_64.tar.gz patat-v0.12.0.0-linux-x86_64/patat
-$ patat-v0.12.0.0-linux-x86_64/patat confidence-2024-openssh-workshop.md</code></pre>
+$ patat-v0.12.0.0-linux-x86_64/patat confidence-2024-openssh-workshop.patat.md</code></pre>
+<h2 id="matrix-room">Matrix Room</h2>
+<p>See invitation email.</p>
+<hr />
+<!--config:
+wrap: false
+margins:
+    left: 10
+    right: 10
+-->
+<h1 id="local-machine-setup">Local Machine Setup</h1>
+<h2 id="docker-installation">Docker Installation</h2>
+<p>On Ubuntu:</p>
+<pre><code>sudo apt update
+sudo apt install docker.io docker-compose-v2</code></pre>
+<p>On Debian:</p>
+<pre><code>sudo apt update
+sudo apt install docker.io</code></pre>
+<p>On Fedora:</p>
+<pre><code>sudo dnf install docker
+sudo systemctl start docker</code></pre>
+<h2 id="various-other-tools">Various other tools</h2>
+<p>We will use <code>netcat</code> (<code>netcat-traditional</code> on
+Debian/Ubuntu), <code>curl</code>, <code>tcpdump</code> (or
+<code>wireshark</code>).</p>
 <hr />
 <!--config:
 wrap: false
@@ -261,16 +285,16 @@ each machine.</p>
 which the command shall be run:</p>
 <pre><code>(local)$ &lt;local command&gt;
 (lab-server)$ &lt;remote command on lab-server&gt;
-(internal-machine)$ &lt;remote commandi on internal-machine&gt;</code></pre>
+(internal-machine)$ &lt;remote command on internal-machine&gt;</code></pre>
 <h1 id="ip-addresses">IP addresses</h1>
 <ul>
-<li><p>IP addresses are dynamically allocated when you execute
+<li><p>IP addresses are configured statically when you execute
 <code>start_containers.sh</code></p></li>
 <li><p>3 IP addresses will appear during this workshop</p>
 <ul>
-<li>lab-server_pub</li>
-<li>lab-server_priv</li>
-<li>internal-machine_priv</li>
+<li><lab-server_pub></li>
+<li><lab-server_priv></li>
+<li><internal-machine_priv></li>
 </ul></li>
 </ul>
 <hr />
@@ -291,7 +315,8 @@ margins:
 <pre><code> (local)$ cd docker
  (local)$ ./stop_containers.sh</code></pre></li>
 <li><p>Cleanup the whole docker setup: <strong>WARNING this will remove
-all containers, images and networks from your local setup</strong></p>
+all containers, images and networks from your local Docker
+setup</strong></p>
 <pre><code>  (local)$ cd docker
   (local)$ ./docker_cleanup.sh
   (local)$ sudo systemctl restart docker</code></pre></li>
@@ -607,7 +632,8 @@ passphrase):</p>
 <li><p>Install your public key on the remote server:</p>
 <p><code>(local)$ ssh-copy-id -i ~/.ssh/my-ssh-key.pub user@&lt;lab-server_pub&gt;</code></p>
 <p><strong>Note</strong>: <code>ssh-copy-id</code> copies the public key
-from <code>~/.ssh/authorized_keys</code> to the remote machine</p></li>
+from <code>~/.ssh/my-ssh-key.pub</code> to the remote machine in
+<code>~/.ssh/authorized_keys</code></p></li>
 <li><p>Login again with your new key pair:</p>
 <p><code>(local)$ ssh -i ~/.ssh/my-ssh-key user@&lt;lab-server_pub&gt;</code></p></li>
 <li><p>Reference your key pair in your personal local configuration file
@@ -686,7 +712,7 @@ destination machine:</p>
 <p><code>(local)$ ssh user@&lt;lab-server_pub&gt;</code>
 <code>(lab-server)$ ssh-copy-id -f -i my-ssh-key.pub &lt;internal-machine_priv&gt;</code></p></li>
 <li><p>Connect to the remote machine with a single command:</p>
-<p><code>(local)$ ssh -J user@&lt;lab-server_pub&gt; user@&lt;internal-machine_prib&gt;</code></p></li>
+<p><code>(local)$ ssh -J user@&lt;lab-server_pub&gt; user@&lt;internal-machine_priv&gt;</code></p></li>
 </ul>
 <p><strong>Note</strong>: <em>internal-machine</em> host key
 fingerprints available at
@@ -746,8 +772,7 @@ proxy (tick the option in configuration)</p></li>
 <li><p>Point your browser to http://secret-intranet or Try it with
 curl:</p>
 <pre><code>  (local)$ http_proxy=socks5h://127.0.0.1:1234 curl http://secret-intranet
-  Secret intranet server !
-  This is lab-server listening on 127.0.0.1 port 80.</code></pre></li>
+  This is the secret Intranet on internal-machine listening on 127.0.0.1 port 80.</code></pre></li>
 <li><p>Bonus: look at your local traffic with <em>tcpdump</em>, you
 shouldn’t see any DNS exchanges</p></li>
 </ul>
@@ -784,7 +809,7 @@ establishing an SSH connection to lab-server with parameter -R</p></li>
 <li><p>Point your curl on lab-server to http://icanhazip.com though the
 SOCKS proxy listening on 127.0.0.1<span class="emoji"
 data-emoji="1234">🔢</span></p>
-<pre><code>  (lab-server_pub)$ http_proxy=socks5h://127.0.0.1:1234 curl http://icanhazip.com
+<pre><code>  (lab-server)$ http_proxy=socks5h://127.0.0.1:1234 curl http://icanhazip.com
   &lt;Confidence conference Internet access public IP address&gt;</code></pre></li>
 </ul>
 <hr />
@@ -803,8 +828,8 @@ on port 8888 to TCP port 80 on 127.0.0.1 in the context of
 <p>Setup:</p>
 <ul>
 <li><p>Configure the forwarding while connecting to <em>lab-server</em>
-through SSH with -L parameter: (local)$ ssh -L 8888:127.0.0.1:80
-user@<lab-server_pub></p></li>
+through SSH with -L parameter:
+<code>(local)$ ssh -L 8888:127.0.0.1:80 user@&lt;lab-server_pub&gt;</code></p></li>
 <li><p>-L parameter syntax:</p></li>
 </ul>
 <p><code>&lt;local_port&gt;:&lt;remote_IP&gt;:&lt;remote_port&gt;</code></p>
@@ -849,7 +874,7 @@ TCP port 1234: <code>(local)$ nc -l -p 1234 127.0.0.1</code></p></li>
 <p><code>&lt;remote_IP&gt;:&lt;remote_port&gt;:&lt;local_IP&gt;:&lt;local_port&gt;</code></p>
 <ul>
 <li>Check its listening status on lab-server:
-<code>(lab-server)$ netstat -tpln | grep 8123</code></li>
+<code>(lab-server)$ ss -tpln | grep 8123</code></li>
 <li>Connect to the forwarded service on remote machine on port 8123 with
 netcat: <code>(lab-server)$ nc 127.0.0.1 8123</code></li>
 <li>Both netcat instances, local &amp; remote, should be able to

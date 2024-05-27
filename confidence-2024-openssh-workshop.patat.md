@@ -11,7 +11,7 @@ geometry: "left=1cm,right=1cm,top=1cm,bottom=1cm"
 output: pdf_document
 ...
 
-**Confidence 2024 Kraków**
+**CONFidence 2024 Kraków**
 
 **Exploring OpenSSH: Hands-On Workshop for Beginners**
 
