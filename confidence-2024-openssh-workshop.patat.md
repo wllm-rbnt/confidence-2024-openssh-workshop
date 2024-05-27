@@ -83,18 +83,25 @@ margins:
 
 On Ubuntu:
 
-    sudo apt update
-    sudo apt install docker.io docker-compose-v2
+    $ sudo apt update
+    $ sudo apt install docker.io docker-compose-v2
 
 On Debian:
 
-    sudo apt update
-    sudo apt install docker.io
+    $ sudo apt update
+    $ sudo apt install docker.io
 
 On Fedora:
 
-    sudo dnf install docker
-    sudo systemctl start docker
+    $ sudo dnf install docker
+    $ sudo systemctl start docker
+
+On Debian/Fedora you can install *docker-compose* version 2 directly from upstream:
+
+    $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
+    $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    $ sudo chmod +x /usr/local/bin/docker-compose
+    $ hash -r # you migtht need this to refresh the list en executables in your PATH
 
 ## Various other tools
 
@@ -208,10 +215,10 @@ margins:
         (local)$ sudo apt install wireshark
         (local)$ sudo wireshark
 
-or
+* or
 
-    (local)$ sudo apt install tcpdump
-    (local)$ sudo tcpdump -n -i any -XXX tcp and port 23
+        (local)$ sudo apt install tcpdump
+        (local)$ sudo tcpdump -n -i any -XXX tcp and port 23
 
 * Then, in another shell, run the *telnet* client on your local machine:
 
@@ -219,7 +226,6 @@ or
         (local)$ telnet 172.18.0.2
 
 * Login, *user* Password, *user*
-
 
 ---
 
@@ -340,7 +346,7 @@ Username and password are the same as the one from the telnet example:
 
 - Start a traffic capture on TCP port 22 in another terminal, traffic is **encrypted**:
 
-    (local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22
+        (local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22
 
 - Retrieve the server keys fingerprints through a secure channel:
 
@@ -542,10 +548,10 @@ margins:
 
 - Reference your key pair in your personal local configuration file (`~/.ssh/config`):
 
-    Host lab-server
-        Hostname <lab-server_pub>
-        User user
-        IdentityFile ~/.ssh/my-ssh-key
+        Host lab-server
+            Hostname <lab-server_pub>
+            User user
+            IdentityFile ~/.ssh/my-ssh-key
 
 ---
 
@@ -929,12 +935,12 @@ margins:
 - Try to connect to port 2222 with `ssh user@<lab-server_pub> -p 2222`
 - Check both ports with `netcat`:
 
-            (local)$ nc -nv 31.22.124.187 22
-            (UNKNOWN) [31.22.124.187] 22 (ssh) open
+            (local)$ nc -nv <lab-server_pub> 22
+            (UNKNOWN) [<lab-server_pub>] 22 (ssh) open
             SSH-2.0-OpenSSH_9.2p1 Debian-2
 
-            (local)$ nc -nv 31.22.124.187 2222
-            (UNKNOWN) [31.22.124.187] 2222 (?) open
+            (local)$ nc -nv <lab-server_pub> 2222
+            (UNKNOWN) [<lab-server_pub>] 2222 (?) open
             XkZ?NK>-h5xs#/OSF
             SU6Jv
             6%n[;
@@ -998,5 +1004,5 @@ margins:
     right: auto
 -->
 
-**Thanks for your attention**
+**Thanks for your attention !**
 

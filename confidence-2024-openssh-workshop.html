@@ -230,14 +230,20 @@ margins:
 <h1 id="local-machine-setup">Local Machine Setup</h1>
 <h2 id="docker-installation">Docker Installation</h2>
 <p>On Ubuntu:</p>
-<pre><code>sudo apt update
-sudo apt install docker.io docker-compose-v2</code></pre>
+<pre><code>$ sudo apt update
+$ sudo apt install docker.io docker-compose-v2</code></pre>
 <p>On Debian:</p>
-<pre><code>sudo apt update
-sudo apt install docker.io</code></pre>
+<pre><code>$ sudo apt update
+$ sudo apt install docker.io</code></pre>
 <p>On Fedora:</p>
-<pre><code>sudo dnf install docker
-sudo systemctl start docker</code></pre>
+<pre><code>$ sudo dnf install docker
+$ sudo systemctl start docker</code></pre>
+<p>On Debian/Fedora you can install <em>docker-compose</em> version 2
+directly from upstream:</p>
+<pre><code>$ sudo curl -L &quot;https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)&quot;  -o /usr/local/bin/docker-compose
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+$ hash -r # you migtht need this to refresh the list en executables in your PATH</code></pre>
 <h2 id="various-other-tools">Various other tools</h2>
 <p>We will use <code>netcat</code> (<code>netcat-traditional</code> on
 Debian/Ubuntu), <code>curl</code>, <code>tcpdump</code> (or
@@ -335,11 +341,9 @@ port 23</p></li>
 <li><p>Start a traffic capture on TCP port 23 in another terminal:</p>
 <pre><code>  (local)$ sudo apt install wireshark
   (local)$ sudo wireshark</code></pre></li>
-</ul>
-<p>or</p>
-<pre><code>(local)$ sudo apt install tcpdump
-(local)$ sudo tcpdump -n -i any -XXX tcp and port 23</code></pre>
-<ul>
+<li><p>or</p>
+<pre><code>  (local)$ sudo apt install tcpdump
+  (local)$ sudo tcpdump -n -i any -XXX tcp and port 23</code></pre></li>
 <li><p>Then, in another shell, run the <em>telnet</em> client on your
 local machine:</p>
 <pre><code>  (local)$ sudo apt install telnet
@@ -460,7 +464,7 @@ example: - Username: <em>user</em> / Password: <em>user</em></p>
 <ul>
 <li><p>Start a traffic capture on TCP port 22 in another terminal,
 traffic is <strong>encrypted</strong>:</p>
-<p>(local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22</p></li>
+<pre><code>  (local)$ sudo tcpdump -n -i docker0 -XXX tcp and port 22</code></pre></li>
 <li><p>Retrieve the server keys fingerprints through a secure
 channel:</p>
 <p>https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/blob/main/fingerprints.txt</p></li>
@@ -638,8 +642,10 @@ from <code>~/.ssh/my-ssh-key.pub</code> to the remote machine in
 <p><code>(local)$ ssh -i ~/.ssh/my-ssh-key user@&lt;lab-server_pub&gt;</code></p></li>
 <li><p>Reference your key pair in your personal local configuration file
 (<code>~/.ssh/config</code>):</p>
-<p>Host lab-server Hostname <lab-server_pub> User user IdentityFile
-~/.ssh/my-ssh-key</p></li>
+<pre><code>  Host lab-server
+      Hostname &lt;lab-server_pub&gt;
+      User user
+      IdentityFile ~/.ssh/my-ssh-key</code></pre></li>
 </ul>
 <hr />
 <!--config:
@@ -978,12 +984,12 @@ on the remote server for demonstration purpose</p></li>
 <li><p>Try to connect to port 2222 with
 <code>ssh user@&lt;lab-server_pub&gt; -p 2222</code></p></li>
 <li><p>Check both ports with <code>netcat</code>:</p>
-<pre><code>      (local)$ nc -nv 31.22.124.187 22
-      (UNKNOWN) [31.22.124.187] 22 (ssh) open
+<pre><code>      (local)$ nc -nv &lt;lab-server_pub&gt; 22
+      (UNKNOWN) [&lt;lab-server_pub&gt;] 22 (ssh) open
       SSH-2.0-OpenSSH_9.2p1 Debian-2
 
-      (local)$ nc -nv 31.22.124.187 2222
-      (UNKNOWN) [31.22.124.187] 2222 (?) open
+      (local)$ nc -nv &lt;lab-server_pub&gt; 2222
+      (UNKNOWN) [&lt;lab-server_pub&gt;] 2222 (?) open
       XkZ?NK&gt;-h5xs#/OSF
       SU6Jv
       6%n[;
@@ -1055,6 +1061,6 @@ margins:
     left: auto
     right: auto
 -->
-<p><strong>Thanks for your attention</strong></p>
+<p><strong>Thanks for your attention !</strong></p>
 </body>
 </html>
