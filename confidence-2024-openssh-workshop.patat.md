@@ -114,16 +114,16 @@ Shell commands are prefixed by a prompt designating the machine on which the com
 
     (local)$ <local command>
     (lab-server)$ <remote command on lab-server>
-    (internal-machine)$ <remote commandi on internal-machine>
+    (internal-machine)$ <remote command on internal-machine>
 
 # IP addresses
 
-* IP addresses are dynamically allocated when you execute `start_containers.sh`
+* IP addresses are configured statically when you execute `start_containers.sh`
 
 * 3 IP addresses will appear during this workshop
-    + lab-server_pub
-    + lab-server_priv
-    + internal-machine_priv
+    + <lab-server_pub>
+    + <lab-server_priv>
+    + <internal-machine_priv>
 
 --- 
 
@@ -149,7 +149,7 @@ margins:
         (local)$ ./stop_containers.sh
    
 * Cleanup the whole docker setup:
-    **WARNING this will remove all containers, images and networks from your local setup**
+    **WARNING this will remove all containers, images and networks from your local Docker setup**
     
         (local)$ cd docker
         (local)$ ./docker_cleanup.sh
@@ -498,7 +498,7 @@ margins:
 
     `(local)$ ssh-copy-id -i ~/.ssh/my-ssh-key.pub user@<lab-server_pub>`
 
-    **Note**: `ssh-copy-id` copies the public key from `~/.ssh/authorized_keys` to the remote machine
+    **Note**: `ssh-copy-id` copies the public key from `~/.ssh/my-ssh-key.pub` to the remote machine in `~/.ssh/authorized_keys`
 
 - Login again with your new key pair:
 
@@ -611,7 +611,7 @@ Setup:
 
 - Connect to the remote machine with a single command:
 
-    `(local)$ ssh -J user@<lab-server_pub> user@<internal-machine_prib>`
+    `(local)$ ssh -J user@<lab-server_pub> user@<internal-machine_priv>`
 
 **Note**: *internal-machine* host key fingerprints available at https://github.com/wllm-rbnt/confidence-2024-openssh-workshop/blob/main/fingerprints.txt
 
@@ -672,8 +672,7 @@ margins:
 * Point your browser to http://secret-intranet or Try it with curl:
 
         (local)$ http_proxy=socks5h://127.0.0.1:1234 curl http://secret-intranet
-        Secret intranet server !
-        This is lab-server listening on 127.0.0.1 port 80.
+        This is the secret Intranet on internal-machine listening on 127.0.0.1 port 80.
 
 * Bonus: look at your local traffic with *tcpdump*, you shouldn't see any DNS exchanges
 
@@ -713,7 +712,7 @@ Setup:
 * Point your curl on lab-server to http://icanhazip.com though the SOCKS proxy listening on 127.0.0.1:1234:
 
 
-        (lab-server_pub)$ http_proxy=socks5h://127.0.0.1:1234 curl http://icanhazip.com
+        (lab-server)$ http_proxy=socks5h://127.0.0.1:1234 curl http://icanhazip.com
         <Confidence conference Internet access public IP address>
 
 ---
@@ -735,7 +734,7 @@ SSH to a TCP port reachable in the network scope of a remote machine
 Setup:
 
 * Configure the forwarding while connecting to *lab-server* through SSH with -L parameter:
-  (local)$ ssh -L 8888:127.0.0.1:80 user@<lab-server_pub>
+  `(local)$ ssh -L 8888:127.0.0.1:80 user@<lab-server_pub>`
 
 * -L parameter syntax:
 
@@ -789,7 +788,7 @@ can be extended to
 `<remote_IP>:<remote_port>:<local_IP>:<local_port>`
 
 
-* Check its listening status on lab-server: `(lab-server)$ netstat -tpln | grep 8123`
+* Check its listening status on lab-server: `(lab-server)$ ss -tpln | grep 8123`
 * Connect to the forwarded service on remote machine on port 8123 with netcat: `(lab-server)$ nc 127.0.0.1 8123`
 * Both netcat instances, local & remote, should be able to communicate with each other
 

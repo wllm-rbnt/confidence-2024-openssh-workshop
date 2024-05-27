@@ -21,7 +21,9 @@ RUN mkdir /var/run/sshd; \
 # entrypoint
 RUN { \
     echo '#!/bin/bash -eu'; \
+    echo "sed -i 's/#ServerName www.example.com/ServerName secret-intranet/' /etc/apache2/sites-enabled/000-default.conf"; \
     echo 'ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime'; \
+    echo "echo 'This is the secret Intranet on internal-machine listening on 127.0.0.1 port 80.' > /var/www/html/index.html"; \
     echo 'echo "root:${ROOT_PASSWORD}" | chpasswd'; \
     echo 'echo "user:${USER_PASSWORD}" | chpasswd'; \
     echo 'echo "export PS1=\"internal-machine($(hostname -i))# \"" > /root/.bashrc'; \
@@ -42,4 +44,4 @@ ENV USER_PASSWORD user
 EXPOSE 22
 
 ENTRYPOINT ["entry_point.sh"]
-CMD    ["/usr/sbin/sshd", "-D", "-e"]
+CMD    /etc/init.d/apache2 start ; /usr/sbin/sshd -D -e

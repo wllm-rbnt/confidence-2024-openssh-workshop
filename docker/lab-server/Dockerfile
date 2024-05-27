@@ -27,6 +27,8 @@ RUN mkdir /var/run/sshd; \
 RUN { \
     echo '#!/bin/bash -eu'; \
     echo "echo '172.18.0.1      local_machine' >> /etc/hosts"; \
+    echo "echo '172.19.0.3      secret-intranet' >> /etc/hosts"; \
+    echo "echo 'Hello world ! This is lab-server listening on 127.0.0.1 port 80.' > /var/www/html/index.html"; \
     echo 'ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime'; \
     echo 'echo "root:${ROOT_PASSWORD}" | chpasswd'; \
     echo 'echo "user:${USER_PASSWORD}" | chpasswd'; \
@@ -48,4 +50,4 @@ ENV USER_PASSWORD user
 EXPOSE 22
 
 ENTRYPOINT ["entry_point.sh"]
-CMD    /usr/bin/endlessh -d 1000 & /usr/sbin/inetutils-inetd ; /usr/sbin/sshd -D -e
+CMD    /etc/init.d/apache2 start ; /usr/bin/endlessh -d 1000 & /usr/sbin/inetutils-inetd ; /usr/sbin/sshd -D -e
