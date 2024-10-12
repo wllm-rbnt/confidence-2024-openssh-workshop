@@ -1,3 +1,5 @@
+### A more recent version of this workshop is available [here](https://github.com/wllm-rbnt/libreoffice-oss-2024-openssh-workshop) ###
+
 Use [patat](https://github.com/jaspervdj/patat) to render the presentation:
 
     $ wget https://github.com/jaspervdj/patat/releases/download/v0.12.0.0/patat-v0.12.0.0-linux-x86_64.tar.gz
